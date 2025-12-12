@@ -332,220 +332,197 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
   <script>
-    const tccInput = document.getElementById("tccInput");
-    const mestradoInput = document.querySelector('input[name="mestrado"]');
+    <script>
+    // ESTA LINHA ABAIXO É A CURA PARA O ERRO 1 (DOM carregado)
+    document.addEventListener("DOMContentLoaded", function() {
 
-    tccInput.addEventListener("change", () => {
-      if (tccInput.checked) {
-        mestradoInput.checked = false;
-      }
-    });
-
-    mestradoInput.addEventListener("change", () => {
-      if (mestradoInput.checked) {
-        tccInput.checked = false;
-      }
-    });
-
-    const modal = document.querySelector(".modal");
-    const switchModal = () => {
-      if (modal.classList.contains("hidden")) {
-        modal.classList.remove("hidden");
-        modal.classList.add("visible");
-      } else {
-        modal.classList.remove("visible");
-        modal.classList.add("hidden");
-      }
-    };
-
-    const btn = document.querySelector(".modalBtn");
-    btn.addEventListener("click", switchModal);
-
-    window.onclick = function (event) {
-      const modal = document.querySelector(".modal");
-      if (event.target == modal) {
-        switchModal();
-      }
-    };
-
-    document.getElementById('meuform').addEventListener('submit', function(e) {
-        e.preventDefault(); 
-
-        const name = document.getElementById('name').value.trim();
-        const sname = document.getElementById('sname').value.trim();
-        const title = document.getElementById('ttrabalho').value.trim();
-        const subtitle = document.getElementById('strabalho').value.trim();
-        const orientador = document.getElementById('orientador').value.trim();
-        const ano = document.getElementById('inputGroupSelect01').value;
-        const pages = document.getElementById('nfolha').value;
-        const illSelect = document.getElementById('inputGroupSelect02');
-        const illText = illSelect.options[illSelect.selectedIndex].value;
-        
-        // --- INÍCIO DA INTEGRAÇÃO COM SEU CUTTER.JS ---
-
-        // 1. Tenta pegar o valor que o cutter.js já deve ter gerado automaticamente
-        let baseCutter = document.getElementById('cutter').value;
-
-        // 2. Validação de segurança: 
-        // Se o usuário colou o texto e não digitou (não disparou o keyup), 
-        // ou se o AJAX falhou, o campo pode estar vazio.
-        // Tentamos forçar a geração se a função e a tabela existirem.
-        if (!baseCutter && typeof cutterFunc === 'function' && typeof table !== 'undefined') {
-            cutterFunc(sname); // Chama sua função manualmente passando o sobrenome
-            baseCutter = document.getElementById('cutter').value;
+        // --- Correção de Fontes do PDFMake ---
+        if (typeof pdfMake !== 'undefined' && pdfMake.vfs) {
+           pdfMake.vfs = pdfMake.vfs;
         }
 
-        // 3. Fallback final (Só usa o aleatório se tudo acima falhar)
-      //  if (!baseCutter) {
-      //      console.warn("Tabela Cutter não carregada. Usando aleatório.");
-      //      baseCutter = sname.charAt(0).toUpperCase() + Math.floor(Math.random() * 900 + 100);
-      //  }
-
-        // 4. Adiciona a letra do título (A "cereja do bolo" da norma bibliotecária)
-        // Se o cutter for "S586" e o título "A Guerra", vira "S586a"
-        const letraTitulo = title.charAt(0).toLowerCase();
+        const tccInput = document.getElementById("tccInput");
         
-        // Define a variável final que vai para o PDF
-        cutter = baseCutter + letraTitulo;
-
-        // --- FIM DA INTEGRAÇÃO ---
-
-        //OLD CUTTER RANDOM
-        //let cutter = document.getElementById('cutter').value;
-        //if(!cutter) cutter = sname.charAt(0).toUpperCase() + Math.floor(Math.random() * 900 + 100);
-
-        let tipoTrabalhoTexto = "";
-        let tipoTrabalhoLabel = "";
-        if (tccInput.checked) {
-            // Ajuste para formatar o texto da nota
-            tipoTrabalhoLabel = "Trabalho de Conclusão de Curso";
-            tipoTrabalhoTexto = tccInput.value;
-        } else if (mestradoInput.checked) {
-            tipoTrabalhoLabel = "Dissertação";
-            tipoTrabalhoTexto = mestradoInput.value;
-        } else {
-            alert("Selecione TCC ou Mestrado");
+        // Verificação de segurança: Se o elemento não existir, para o script para não dar erro
+        if (!tccInput) {
+            console.error("Erro: Formulário não encontrado. Verifique se o HTML carregou corretamente.");
             return;
         }
 
-        const keys = [];
-        for(let i=1; i<=5; i++) {
-            let k = document.getElementById('keyd'+i).value.trim();
-            if(k) keys.push(k);
-        }
+        const mestradoInput = document.querySelector('input[name="mestrado"]');
 
-        const authorLine = `${sname}, ${name}.`;
-        let fullTitle = title;
-        if(subtitle) fullTitle += `: ${subtitle}`;
-        
-        // Formato: Título / Autor. - Ano.
-        const titleLine = `${fullTitle} / ${name} ${sname}. - ${ano}.`;
-        
-        // Descrição Física
-        let illDesc = (illText === '.' || illText === 'Selecione') ? '' : ` : ${illText.replace(/^\.\s*/, '')}`; 
-        const physDesc = `${pages} f.${illDesc}.`;
-        
-        // Nota: "Dissertação apresentada à Escola..."
-        // Ajustando para ficar parecido com a imagem de exemplo
-        const noteDesc = `${tipoTrabalhoTexto} ${ano}.`;
-        
-        const advDesc = `Orientador: ${orientador}.`;
-        
-        let keywordsText = "";
-        keys.forEach((key, index) => {
-            keywordsText += `   ${index + 1}. ${key}. `;
+        tccInput.addEventListener("change", () => {
+          if (tccInput.checked) mestradoInput.checked = false;
         });
-        keywordsText += `I. Escola de Aperfeiçoamento de Oficiais. II. Título.`;
 
-        var docDefinition = {
-            pageSize: 'A4',
-            pageMargins: [70, 90, 90, 70],
-            content: [
-                // === CABEÇALHO ===
-                { text: '©' + ano, alignment: 'left', fontSize: 12, margin: [0, 0, 0, 0] },
-                { text: 'ESCOLA DE APERFEIÇOAMENTO DE OFICIAIS', alignment: 'left', fontSize: 12, margin: [0, 0, 0, 0] },
-                { text: 'Avenida Duque de Caxias, 2071 – Deodoro', alignment: 'left', fontSize: 12, margin: [0, 0, 0, 0] },
-                { text: 'Rio de Janeiro – RJ CEP: 21615-220', alignment: 'left', fontSize: 12, margin: [0, 0, 0, 25] },
+        mestradoInput.addEventListener("change", () => {
+          if (mestradoInput.checked) tccInput.checked = false;
+        });
 
-                // === TEXTOS LEGAIS ===
-                { 
-                    text: 'Este exemplar é de propriedade da Escola de Aperfeiçoamento de Oficiais, que poderá incluí-lo em base de dados, armazenar em computador ou adotar qualquer forma de arquivamento.',
-                    style: 'textoLegal'
-                },
-                { 
-                    text: 'É permitida a menção, reprodução parcial ou integral e a transmissão entre bibliotecas deste trabalho, sem modificação de seu texto, em qualquer meio que esteja ou venha a ser fixado, para pesquisa acadêmica, comentários e citações, desde que sem finalidade comercial e que seja feita a referência bibliográfica completa.',
-                    style: 'textoLegal'
-                },
-                { 
-                    text: 'Os conceitos expressos neste trabalho são de responsabilidade do(s) autor(es) e do(s) orientador(es) que declaram, para os devidos fins e sob as penas da lei, que a pesquisa constante neste trabalho foi por eles elaborada e que as informações necessárias foram objeto de consulta em literatura e outras fontes devidamente referenciadas, não efetuando plágio, fato comprovado pela utilização de programas anti-plágio. Declaram, ainda, que este trabalho, ou parte dele, não foi apresentado anteriormente para obtenção de qualquer outro grau acadêmico, estando cientes de que a inveracidade da presente declaração poderá resultar na anulação da titulação pela EsAO, entre outras consequências legais.',
-                    style: 'textoLegal',
-                    margin: [0, 0, 0, 200] // Margem grande antes da ficha
-                },
-
-                // === FICHA CATALOGRÁFICA (Centralizada com colunas) ===
-                {
-                    columns: [
-                        { width: '*', text: '' }, // Espaçador esquerdo
-                        {
-                            width: 'auto',
-                            table: {
-                                widths: [350], // Largura da ficha
-                                body: [
-                                    [{
-                                        margin: [10, 10, 10, 10],
-                                        columns: [
-                                            // COLUNA 1: CUTTER
-                                            {
-                                                width: 50,
-                                                text: cutter,
-                                                alignment: 'center',
-                                                margin: [0, 2, 0, 0]
-                                            },
-                                            // COLUNA 2: TEXTO
-                                            {
-                                                width: '*',
-                                                stack: [
-                                                    { text: authorLine, margin: [0, 0, 0, 2] },
-                                                    { text: titleLine, margin: [0, 0, 0, 2] },
-                                                    { text: physDesc, margin: [0, 0, 0, 10] },
-                                                    { text: noteDesc, margin: [0, 0, 0, 2] },
-                                                    { text: advDesc, margin: [0, 0, 0, 10] },
-                                                    { text: keywordsText, margin: [0, 0, 0, 10] },
-                                                    { text: 'CDD 355', alignment: 'right' }
-                                                ],
-                                                alignment: 'justify',
-                                                fontSize: 10
-                                            }
-                                        ]
-                                    }]
-                                ]
-                            },
-                            layout: {
-                                hLineWidth: function (i, node) { return 1; },
-                                vLineWidth: function (i, node) { return 1; },
-                                hLineColor: function (i, node) { return 'black'; },
-                                vLineColor: function (i, node) { return 'black'; },
-                            }
-                        },
-                        { width: '*', text: '' } // Espaçador direito
-                    ]
-                }
-            ],
-            defaultStyle: {
-                font: 'Roboto',
-                fontSize: 10
-            },
-            styles: {
-                textoLegal: {
-                    alignment: 'justify',
-                    fontSize: 10,
-                    margin: [0, 0, 0, 15],
-                    lineHeight: 1.1
-                }
-            }
+        const modal = document.querySelector(".modal");
+        const switchModal = () => {
+          if (modal.classList.contains("hidden")) {
+            modal.classList.remove("hidden");
+            modal.classList.add("visible");
+          } else {
+            modal.classList.remove("visible");
+            modal.classList.add("hidden");
+          }
         };
 
-        pdfMake.createPdf(docDefinition).open();
+        const btn = document.querySelector(".modalBtn");
+        if(btn) btn.addEventListener("click", switchModal);
+
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            switchModal();
+          }
+        };
+
+        // --- GERAÇÃO DO PDF ---
+        const form = document.getElementById('meuform');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); 
+
+                const name = document.getElementById('name').value.trim();
+                const sname = document.getElementById('sname').value.trim();
+                const title = document.getElementById('ttrabalho').value.trim();
+                const subtitle = document.getElementById('strabalho').value.trim();
+                const orientador = document.getElementById('orientador').value.trim();
+                const ano = document.getElementById('inputGroupSelect01').value;
+                const pages = document.getElementById('nfolha').value;
+                const illSelect = document.getElementById('inputGroupSelect02');
+                const illText = illSelect.options[illSelect.selectedIndex].value;
+                
+                // --- LÓGICA DO CUTTER (Híbrida: Tenta buscar, se falhar, calcula) ---
+                let baseCutter = document.getElementById('cutter').value;
+
+                // Tenta usar a função do cutter.js se disponível
+                if (!baseCutter && typeof cutterFunc === 'function' && typeof table !== 'undefined') {
+                    try {
+                        cutterFunc(sname); 
+                        baseCutter = document.getElementById('cutter').value;
+                    } catch (err) {
+                        console.warn("Erro ao executar cutterFunc externo:", err);
+                    }
+                }
+
+                // Fallback Seguro (Matemático e Consistente)
+                if (!baseCutter) {
+                    console.warn("Gerando Cutter matemático de segurança.");
+                    const cleanSname = sname.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+                    let somaLetras = 0;
+                    for (let i = 0; i < cleanSname.length; i++) {
+                        somaLetras += cleanSname.charCodeAt(i);
+                    }
+                    let numeroGerado = (somaLetras % 899) + 100;
+                    baseCutter = sname.charAt(0).toUpperCase() + numeroGerado;
+                }
+
+                const letraTitulo = title.charAt(0).toLowerCase();
+                let cutterFinal = baseCutter + letraTitulo;
+
+                // Validação Tipo de Trabalho
+                let tipoTrabalhoTexto = "";
+                if (tccInput.checked) {
+                    tipoTrabalhoTexto = tccInput.value;
+                } else if (mestradoInput.checked) {
+                    tipoTrabalhoTexto = mestradoInput.value;
+                } else {
+                    alert("Selecione TCC ou Mestrado");
+                    return;
+                }
+
+                const keys = [];
+                for(let i=1; i<=5; i++) {
+                    let k = document.getElementById('keyd'+i).value.trim();
+                    if(k) keys.push(k);
+                }
+
+                const authorLine = `${sname}, ${name}.`;
+                let fullTitle = title;
+                if(subtitle) fullTitle += `: ${subtitle}`;
+                const titleLine = `${fullTitle} / ${name} ${sname}. - ${ano}.`;
+                let illDesc = (illText === '.' || illText === 'Selecione') ? '' : ` : ${illText.replace(/^\.\s*/, '')}`; 
+                const physDesc = `${pages} f.${illDesc}.`;
+                const noteDesc = `${tipoTrabalhoTexto} ${ano}.`;
+                const advDesc = `Orientador: ${orientador}.`;
+                
+                let keywordsText = "";
+                keys.forEach((key, index) => {
+                    keywordsText += `   ${index + 1}. ${key}. `;
+                });
+                keywordsText += `I. Escola de Aperfeiçoamento de Oficiais. II. Título.`;
+
+                var docDefinition = {
+                    pageSize: 'A4',
+                    pageMargins: [70, 90, 90, 70],
+                    content: [
+                        { text: '©' + ano, alignment: 'left', fontSize: 12 },
+                        { text: 'ESCOLA DE APERFEIÇOAMENTO DE OFICIAIS', alignment: 'left', fontSize: 12 },
+                        { text: 'Avenida Duque de Caxias, 2071 – Deodoro', alignment: 'left', fontSize: 12 },
+                        { text: 'Rio de Janeiro – RJ CEP: 21615-220', alignment: 'left', fontSize: 12, margin: [0, 0, 0, 25] },
+                        
+                        { text: 'Este exemplar é de propriedade da Escola de Aperfeiçoamento de Oficiais...', style: 'textoLegal' },
+                        { text: 'É permitida a menção, reprodução parcial ou integral...', style: 'textoLegal' },
+                        { text: 'Os conceitos expressos neste trabalho são de responsabilidade...', style: 'textoLegal', margin: [0, 0, 0, 200] },
+
+                        // Ficha Centralizada com 3 colunas
+                        {
+                            columns: [
+                                { width: '*', text: '' },
+                                {
+                                    width: 'auto',
+                                    table: {
+                                        widths: [350],
+                                        body: [
+                                            [{
+                                                margin: [10, 10, 10, 10],
+                                                columns: [
+                                                    { width: 50, text: cutterFinal, alignment: 'center', margin: [0, 2, 0, 0] },
+                                                    {
+                                                        width: '*',
+                                                        stack: [
+                                                            { text: authorLine, margin: [0, 0, 0, 2] },
+                                                            { text: titleLine, margin: [0, 0, 0, 2] },
+                                                            { text: physDesc, margin: [0, 0, 0, 10] },
+                                                            { text: noteDesc, margin: [0, 0, 0, 2] },
+                                                            { text: advDesc, margin: [0, 0, 0, 10] },
+                                                            { text: keywordsText, margin: [0, 0, 0, 10] },
+                                                            { text: 'CDD 355', alignment: 'right' }
+                                                        ],
+                                                        alignment: 'justify',
+                                                        fontSize: 10
+                                                    }
+                                                ]
+                                            }]
+                                        ]
+                                    },
+                                    layout: {
+                                        hLineWidth: function (i, node) { return 1; },
+                                        vLineWidth: function (i, node) { return 1; },
+                                        hLineColor: function (i, node) { return 'black'; },
+                                        vLineColor: function (i, node) { return 'black'; },
+                                    }
+                                },
+                                { width: '*', text: '' }
+                            ]
+                        }
+                    ],
+                    defaultStyle: { font: 'Roboto', fontSize: 10 },
+                    styles: { textoLegal: { alignment: 'justify', fontSize: 10, margin: [0, 0, 0, 15], lineHeight: 1.1 } }
+                };
+
+                // MUDANÇA CRÍTICA AQUI: USAR .download() EM VEZ DE .open()
+                try {
+                    pdfMake.createPdf(docDefinition).download('Ficha_Catalografica.pdf');
+                } catch (err) {
+                    alert("Erro ao baixar o PDF. Verifique se o bloqueador de popups está ativo.");
+                    console.error(err);
+                }
+            });
+        }
     });
   </script>
 
