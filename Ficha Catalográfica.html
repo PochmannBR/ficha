@@ -515,7 +515,7 @@
 
                 // MUDANÇA CRÍTICA AQUI: USAR .download() EM VEZ DE .open()
                 try {
-                    pdfMake.createPdf(docDefinition).download('${sname}, ${name} - Ficha Catalografica.pdf');
+                    pdfMake.createPdf(docDefinition).download('Ficha_Catalografica.pdf');
                 } catch (err) {
                     alert("Erro ao baixar o PDF. Verifique se o bloqueador de popups está ativo.");
                     console.error(err);
