@@ -514,10 +514,18 @@
                 };
 
                 // MUDANÇA CRÍTICA AQUI: USAR .download() EM VEZ DE .open()
+                // 1. Cria um nome de arquivo limpo (Ex: SILVA_Joao_Ficha.pdf)
+                // Removemos acentos e espaços para garantir que baixe em qualquer computador/celular
+                const nomeLimpo = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s/g, "_");
+                const sobrenomeLimpo = sname.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/\s/g, "_");
+
+                const nomeArquivo = `${sobrenomeLimpo}_${nomeLimpo}_Ficha_Catalografica.pdf`;
+
+                // 2. Baixa o arquivo com o nome dinâmico
                 try {
-                    pdfMake.createPdf(docDefinition).download('${sname}, ${name}.Ficha_Catalografica.pdf');
+                    pdfMake.createPdf(docDefinition).download(nomeArquivo);
                 } catch (err) {
-                    alert("Erro ao baixar o PDF. Verifique se o bloqueador de popups está ativo.");
+                    alert("Erro ao baixar. Verifique bloqueador de popups.");
                     console.error(err);
                 }
             });
