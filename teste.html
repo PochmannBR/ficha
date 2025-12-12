@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="author" content="www.allvz.com.br">
     <title>Ficha Catalográfica</title>
+    
     <link rel="stylesheet" href="./Ficha Catalográfica_files/bootstrap.min.css">
     <link rel="stylesheet" href="./Ficha Catalográfica_files/Contact-Form-Clean.css">
     <link rel="stylesheet" href="./Ficha Catalográfica_files/bootstrap-icons.css">
@@ -91,7 +92,7 @@
               <span>Exemplos de sobrenome simples: Luís Alves de Lima e Silva (Luís
                 Alves de Lima e = nome; Silva = sobrenome)</span>
             </p>
-            <p class="text" style="margin-top: 0pt; margin-bottom: 8pt; line-height: 108%">
+             <p class="text" style="margin-top: 0pt; margin-bottom: 8pt; line-height: 108%">
               <span>Grau de Parentesco: Ex. 1 - Manuel Luís Osório Júnior (Manuel
                 Luís = nome; Osório Júnior = sobrenome) Ex. 2 - Manuel Luís
                 Osório Filho (Manuel Luís = nome; Osório Filho = sobrenome) Ex.
@@ -134,10 +135,6 @@
             <p class="text" style="margin-top: 0pt; margin-left: 36pt; margin-bottom: 0pt; line-height: 108%;">
               <span>&nbsp;</span>
             </p>
-            <p class="text" style="margin-top: 0pt; margin-left: 36pt; margin-bottom: 0pt; line-height: 108%;">
-              <span>&nbsp;</span>
-            </p>
-
             <li class="text" style="margin-left: 32pt; line-height: 108%; padding-left: 4pt">
               <strong>Nome completo do orientador:</strong> digite o nome
               completo do seu orientador;
@@ -214,9 +211,7 @@
           </div>
 
           <div class="form-group flex-column"></div>
-
           <div class="form-group flex-column"></div>
-
           <div class="form-group flex-column"></div>
           <div class="row">
             <div class="col">
@@ -296,7 +291,6 @@
     </div>
 
     <script src="./Ficha Catalográfica_files/cutter.js.download"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
@@ -337,9 +331,9 @@
       }
     };
 
-    // --- NOVA LÓGICA DO PDFMAKE ---
+    // --- NOVA LÓGICA DO PDFMAKE COM HEADER ESAO ---
     document.getElementById('meuform').addEventListener('submit', function(e) {
-        e.preventDefault(); // Impede o envio tradicional do formulário
+        e.preventDefault(); 
 
         // 1. Captura de Dados
         const name = document.getElementById('name').value.trim();
@@ -347,16 +341,14 @@
         const title = document.getElementById('ttrabalho').value.trim();
         const subtitle = document.getElementById('strabalho').value.trim();
         const orientador = document.getElementById('orientador').value.trim();
-        const year = document.getElementById('inputGroupSelect01').value;
+        const ano = document.getElementById('inputGroupSelect01').value; // Usando a variável 'ano'
         const pages = document.getElementById('nfolha').value;
         const illSelect = document.getElementById('inputGroupSelect02');
         const illText = illSelect.options[illSelect.selectedIndex].value;
         
-        // Cutter: Tenta pegar do input hidden (se o script cutter.js o preencheu). Se não, cria um placeholder.
         let cutter = document.getElementById('cutter').value;
         if(!cutter) cutter = sname.charAt(0).toUpperCase() + Math.floor(Math.random() * 900 + 100);
 
-        // Define o tipo de trabalho
         let tipoTrabalhoTexto = "";
         if (tccInput.checked) {
             tipoTrabalhoTexto = tccInput.value;
@@ -367,7 +359,6 @@
             return;
         }
 
-        // Palavras-chave
         const keys = [];
         for(let i=1; i<=5; i++) {
             let k = document.getElementById('keyd'+i).value.trim();
@@ -375,25 +366,15 @@
         }
 
         // 2. Formatação do Texto (Estilo ABNT)
-        // Autor: SOBRENOME, Nome.
         const authorLine = `${sname.toUpperCase()}, ${name}.`;
-        
-        // Título: Título : subtítulo / Nome Sobrenome. --
         let fullTitle = title;
         if(subtitle) fullTitle += `: ${subtitle}`;
-        const titleLine = `${fullTitle} / ${name} ${sname}. -- Rio de Janeiro, ${year}.`;
-        
-        // Descrição Física: xx f. : il. ; 30 cm. (Assumindo A4/padrão)
+        const titleLine = `${fullTitle} / ${name} ${sname}. -- Rio de Janeiro, ${ano}.`;
         let illDesc = (illText === '.' || illText === 'Selecione') ? '' : ` : ${illText.replace(/^\.\s*/, '')}`; 
         const physDesc = `${pages} f.${illDesc} ; 30 cm.`;
-        
-        // Nota de Tese/Dissertação
-        const noteDesc = `${tipoTrabalhoTexto} ${year}.`;
-        
-        // Orientador
+        const noteDesc = `${tipoTrabalhoTexto} ${ano}.`;
         const advDesc = `Orientador: ${orientador}.`;
-
-        // Pista (Assuntos)
+        
         let keywordsText = "";
         keys.forEach((key, index) => {
             keywordsText += `${index + 1}. ${key}. `;
@@ -405,10 +386,34 @@
             pageSize: 'A4',
             pageMargins: [40, 40, 40, 40],
             content: [
-                { text: ' ', margin: [0, 0, 0, 400] }, // Espaço para empurrar a ficha para baixo (opcional, ajustável)
+                // Header EsAO
+                { text: ano, alignment: 'center', margin: [0, 0, 0, 5], fontSize: 12 },
+                { text: 'ESCOLA DE APERFEIÇOAMENTO DE OFICIAIS', alignment: 'center', bold: true, fontSize: 12, margin: [0, 0, 0, 2] },
+                { text: 'Avenida Duque de Caxias, 2071 - Deodoro', alignment: 'center', fontSize: 10 },
+                { text: 'Rio de Janeiro - RJ CEP: 21615-220', alignment: 'center', fontSize: 10, margin: [0, 0, 0, 40] },
+
+                // Textos Legais
+                { 
+                    text: 'Este exemplar é de propriedade da Escola de Aperfeiçoamento de Oficiais, que poderá incluí-lo em base de dados, armazenar em computador ou adotar qualquer forma de arquivamento.',
+                    style: 'textoLegal'
+                },
+                { 
+                    text: 'É permitida a menção, reprodução parcial ou integral e a transmissão entre bibliotecas deste trabalho, sem modificação de seu texto, em qualquer meio que esteja ou venha a ser fixado, para pesquisa acadêmica, comentários e citações, desde que sem finalidade comercial e que seja feita a referência bibliográfica completa.',
+                    style: 'textoLegal'
+                },
+                { 
+                    text: 'Os conceitos expressos neste trabalho são de responsabilidade do(s) autor(es) e do(s) orientador(es) que declaram, para os devidos fins e sob as penas da lei, que a pesquisa constante neste trabalho foi por eles elaborada e que as informações necessárias foram objeto de consulta em literatura e outras fontes devidamente referenciadas, não efetuando plágio, fato comprovado pela utilização de programas anti-plágio. Declaram, ainda, que este trabalho, ou parte dele, não foi apresentado anteriormente para obtenção de qualquer outro grau acadêmico, estando cientes de que a inveracidade da presente declaração poderá resultar na anulação da titulação pela EsAO, entre outras consequências legais.',
+                    style: 'textoLegal',
+                    margin: [0, 0, 0, 50]
+                },
+
+                // Espaçador para empurrar a ficha para o final (ajustado pois agora tem texto em cima)
+                { text: ' ', margin: [0, 0, 0, 150] },
+
+                // Tabela da Ficha Catalográfica
                 {
                     table: {
-                        widths: [350], // Largura fixa da ficha (~12.5cm)
+                        widths: [350],
                         body: [
                             [{
                                 stack: [
@@ -417,7 +422,7 @@
                                             {
                                                 width: 45,
                                                 text: cutter,
-                                                margin: [0, 10, 0, 0], // Margem superior para alinhar com a primeira linha de texto
+                                                margin: [0, 10, 0, 0], 
                                                 alignment: 'center'
                                             },
                                             {
@@ -426,7 +431,7 @@
                                                     { text: authorLine, margin: [0, 0, 0, 5] },
                                                     { text: titleLine, margin: [0, 0, 0, 5] },
                                                     { text: physDesc, margin: [0, 0, 0, 5] },
-                                                    { text: '\n' }, // Linha em branco
+                                                    { text: '\n' }, 
                                                     { text: noteDesc, margin: [0, 0, 0, 5] },
                                                     { text: '\n' },
                                                     { text: advDesc, margin: [0, 0, 0, 5] },
@@ -437,7 +442,7 @@
                                         ]
                                     }
                                 ],
-                                margin: [10, 10, 10, 10] // Margem interna da célula da tabela
+                                margin: [10, 10, 10, 10]
                             }]
                         ]
                     },
@@ -451,16 +456,22 @@
                         paddingTop: function(i, node) { return 0; },
                         paddingBottom: function(i, node) { return 0; }
                     },
-                    alignment: 'center' // Centraliza a tabela na página
+                    alignment: 'center'
                 }
             ],
             defaultStyle: {
-                font: 'Roboto', // PDFMake usa Roboto por padrão, visualmente similar a Arial
+                font: 'Roboto',
                 fontSize: 10
+            },
+            styles: {
+                textoLegal: {
+                    alignment: 'justify',
+                    fontSize: 10,
+                    margin: [0, 0, 0, 10]
+                }
             }
         };
 
-        // Gerar PDF
         pdfMake.createPdf(docDefinition).open();
     });
   </script>
