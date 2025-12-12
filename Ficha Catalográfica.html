@@ -509,13 +509,13 @@
                             ]
                         }
                     ],
-                    defaultStyle: { font: 'Roboto', fontSize: 10 },
+                    defaultStyle: { font: 'Arial', fontSize: 10 },
                     styles: { textoLegal: { alignment: 'justify', fontSize: 10, margin: [0, 0, 0, 15], lineHeight: 1.1 } }
                 };
 
                 // MUDANÇA CRÍTICA AQUI: USAR .download() EM VEZ DE .open()
                 try {
-                    pdfMake.createPdf(docDefinition).download('Ficha_Catalografica.pdf');
+                    pdfMake.createPdf(docDefinition).download('${sname}, ${name} - Ficha Catalografica.pdf');
                 } catch (err) {
                     alert("Erro ao baixar o PDF. Verifique se o bloqueador de popups está ativo.");
                     console.error(err);
