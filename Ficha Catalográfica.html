@@ -442,7 +442,7 @@
                 const authorLine = `${sname}, ${name}.`;
                 let fullTitle = title;
                 if(subtitle) fullTitle += `: ${subtitle}`;
-                const quatroEspacos = "\u00A0\u00A0\u00A0\u00A0";
+                const quatroEspacos = "    ";
                 const titleLine = `${quatroEspacos}${fullTitle} / ${name} ${sname}. - ${ano}.`;
                 let illDesc = (illText === '.' || illText === 'Selecione') ? '' : ` : ${illText.replace(/^\.\s*/, '')}`; 
                 const physDesc = `${quatroEspacos}${pages} f.${illDesc}`;
