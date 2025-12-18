@@ -236,7 +236,7 @@
           <div class="form-group flex-column"></div>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">Nome do orientador&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <span class="input-group-text">Nome do(a) orientador(a)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </div>
             <input type="text" class="form-control" id="orientador" name="orientador" required="">
 
@@ -407,16 +407,21 @@
                     }
                 }
 
-                // Fallback Seguro (Matemático e Consistente)
+                // Fallback Matemático baseado na progressão alfabética (Mais preciso)
                 if (!baseCutter) {
-                    console.warn("Gerando Cutter matemático de segurança.");
                     const cleanSname = sname.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-                    let somaLetras = 0;
-                    for (let i = 0; i < cleanSname.length; i++) {
-                        somaLetras += cleanSname.charCodeAt(i);
-                    }
-                    let numeroGerado = (somaLetras % 899) + 100;
-                    baseCutter = sname.charAt(0).toUpperCase() + numeroGerado;
+    
+                // Pegamos a 2ª e 3ª letras (ou usamos 'A' se não existirem)
+                let L2 = cleanSname.charCodeAt(1) || 65; 
+                let L3 = cleanSname.charCodeAt(2) || 65;
+
+                // Mapeia o alfabeto (65-90) para uma escala de 10 a 99
+                let n2 = Math.floor(((L2 - 65) / 25) * 8); // Primeiro dígito (baseado na 2ª letra)
+                let n3 = Math.floor(((L3 - 65) / 25) * 9); // Segundo dígito (baseado na 3ª letra)
+    
+                // Garante um número entre 100 e 999 que cresce conforme o alfabeto
+                let numeroGerado = 100 + (n2 * 10) + n3;
+                    baseCutter = cleanSname.charAt(0) + numeroGerado;
                 }
 
                 const letraTitulo = title.charAt(0).toLowerCase();
@@ -446,7 +451,7 @@
                 let illDesc = (illText === '.' || illText === 'Selecione') ? '' : ` : ${illText.replace(/^\.\s*/, '')}`; 
                 const physDesc = `${pages} f.${illDesc}`;
                 const noteDesc = `${tipoTrabalhoTexto} ${ano}.`;
-                const advDesc = `Orientador: ${orientador}.`;
+                const advDesc = `Orientador(a): ${orientador}.`;
                 
                 let keywordsText = "";
                 keys.forEach((key, index) => {
