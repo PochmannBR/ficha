@@ -442,15 +442,16 @@
                 const authorLine = `${sname}, ${name}.`;
                 let fullTitle = title;
                 if(subtitle) fullTitle += `: ${subtitle}`;
-                const titleLine = `${fullTitle} / ${name} ${sname}. - ${ano}.`;
+                const quatroEspacos = "\u00A0\u00A0\u00A0\u00A0";
+                const titleLine = `${quatroEspacos}${fullTitle} / ${name} ${sname}. - ${ano}.`;
                 let illDesc = (illText === '.' || illText === 'Selecione') ? '' : ` : ${illText.replace(/^\.\s*/, '')}`; 
-                const physDesc = `${pages} f.${illDesc}.`;
-                const noteDesc = `${tipoTrabalhoTexto} ${ano}.`;
-                const advDesc = `Orientador: ${orientador}.`;
+                const physDesc = `${quatroEspacos}${pages} f.${illDesc}`;
+                const noteDesc = `${quatroEspacos}${tipoTrabalhoTexto} ${ano}.`;
+                const advDesc = `Orientador: ${quatroEspacos}${orientador}.`;
                 
                 let keywordsText = "";
                 keys.forEach((key, index) => {
-                    keywordsText += `   ${index + 1}. ${key}. `;
+                    keywordsText += `${quatroEspacos}${index + 1}. ${key}. `;
                 });
                 keywordsText += `I. Escola de Aperfeiçoamento de Oficiais. II. Título.`;
 
@@ -484,11 +485,11 @@
                                                         width: '*',
                                                         stack: [
                                                             { text: authorLine, margin: [0, 0, 0, 2] },
-                                                            { text: titleLine, margin: [5, 0, 0, 2] },
-                                                            { text: physDesc, margin: [5, 0, 0, 10] },
-                                                            { text: noteDesc, margin: [5, 0, 0, 2] },
-                                                            { text: advDesc, margin: [5, 0, 0, 10] },
-                                                            { text: keywordsText, margin: [5, 0, 0, 10] },
+                                                            { text: titleLine, margin: [0, 0, 0, 2] },
+                                                            { text: physDesc, margin: [0, 0, 0, 10] },
+                                                            { text: noteDesc, margin: [0, 0, 0, 2] },
+                                                            { text: advDesc, margin: [0, 0, 0, 10] },
+                                                            { text: keywordsText, margin: [0, 0, 0, 10] },
                                                             { text: 'CDD 355', alignment: 'right' }
                                                         ],
                                                         alignment: 'justify',
