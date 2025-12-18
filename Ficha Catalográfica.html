@@ -442,16 +442,15 @@
                 const authorLine = `${sname}, ${name}.`;
                 let fullTitle = title;
                 if(subtitle) fullTitle += `: ${subtitle}`;
-                const quatroEspacos = "    ";
-                const titleLine = `${quatroEspacos}${fullTitle} / ${name} ${sname}. - ${ano}.`;
+                const titleLine = `${fullTitle} / ${name} ${sname}. - ${ano}.`;
                 let illDesc = (illText === '.' || illText === 'Selecione') ? '' : ` : ${illText.replace(/^\.\s*/, '')}`; 
-                const physDesc = `${quatroEspacos}${pages} f.${illDesc}`;
-                const noteDesc = `${quatroEspacos}${tipoTrabalhoTexto} ${ano}.`;
-                const advDesc = `${quatroEspacos}Orientador: ${orientador}.`;
+                const physDesc = `${pages} f.${illDesc}`;
+                const noteDesc = `${tipoTrabalhoTexto} ${ano}.`;
+                const advDesc = `Orientador: ${orientador}.`;
                 
                 let keywordsText = "";
                 keys.forEach((key, index) => {
-                    keywordsText += `${quatroEspacos}${index + 1}. ${key}. `;
+                    keywordsText += `${index + 1}. ${key}. `;
                 });
                 keywordsText += `I. Escola de Aperfeiçoamento de Oficiais. II. Título.`;
 
@@ -468,6 +467,8 @@
                         { text: 'É permitida a menção, reprodução parcial ou integral e a transmissão entre bibliotecas deste trabalho, sem modificação de seu texto, em qualquer meio que esteja ou venha a ser fixado, para pesquisa acadêmica, comentários e citações, desde que sem finalidade comercial e que seja feita a referência bibliográfica completa.', style: 'textoLegal' },
                         { text: 'Os conceitos expressos neste trabalho são de responsabilidade do(s) autor(es) e do(s) orientador(es) que declaram, para os devidos fins e sob as penas da lei, que a pesquisa constante neste trabalho foi por eles elaborada e que as informações necessárias foram objeto de consulta em literatura e outras fontes devidamente referenciadas, não efetuando plágio, fato comprovado pela utilização de programas anti-plágio. Declaram, ainda, que este trabalho, ou parte dele, não foi apresentado anteriormente para obtenção de qualquer outro grau acadêmico, estando cientes de que a inveracidade da presente declaração poderá resultar na anulação da titulação pela EsAO, entre outras consequências legais.', style: 'textoLegal', margin: [0, 0, 0, 200] },
 
+                        { text: 'Ficha catalográfica elaborada pelo Sistema Gerador de Ficha Catalográfica da EsAO com dados informados pelo(a) próprio(a) autor(a).', alignment: 'center', fontSize: 10, margin: [0, 0, 0, 5] },
+                        
                         // Ficha Centralizada com 3 colunas
                         {
                             columns: [
@@ -485,11 +486,11 @@
                                                         width: '*',
                                                         stack: [
                                                             { text: authorLine, margin: [0, 0, 0, 2], alignment: 'left' },
-                                                            { text: titleLine, margin: [0, 0, 0, 2], alignment: 'left' },
-                                                            { text: physDesc, margin: [0, 0, 0, 10], alignment: 'left' },
-                                                            { text: noteDesc, margin: [0, 0, 0, 2], alignment: 'left' },
-                                                            { text: advDesc, margin: [0, 0, 0, 10], alignment: 'left' },
-                                                            { text: keywordsText, margin: [0, 0, 0, 10], alignment: 'left' },
+                                                            { text: titleLine, margin: [15, 0, 0, 2], alignment: 'left' },
+                                                            { text: physDesc, margin: [15, 0, 0, 10], alignment: 'left' },
+                                                            { text: noteDesc, margin: [15, 0, 0, 2], alignment: 'left' },
+                                                            { text: advDesc, margin: [15, 0, 0, 10], alignment: 'left' },
+                                                            { text: keywordsText, margin: [15, 0, 0, 10], alignment: 'left' },
                                                             { text: 'CDD 355', alignment: 'right' }
                                                         ],
                                                         alignment: 'left',
