@@ -471,17 +471,10 @@
                         { text: 'Este exemplar é de propriedade da Escola de Aperfeiçoamento de Oficiais, que poderá incluí-lo em base de dados, armazenar em computador ou adotar qualquer forma de arquivamento.', style: 'textoLegal' },
                         { text: 'É permitida a menção, reprodução parcial ou integral e a transmissão entre bibliotecas deste trabalho, sem modificação de seu texto, em qualquer meio que esteja ou venha a ser fixado, para pesquisa acadêmica, comentários e citações, desde que sem finalidade comercial e que seja feita a referência bibliográfica completa.', style: 'textoLegal' },
                         
-                        // Note que reduzi a margem inferior aqui para 50, pois a ficha agora é absoluta e não empurra mais o texto
-                        { text: 'Os conceitos expressos neste trabalho são de responsabilidade do(s) autor(es) e do(s) orientador(es) que declaram, para os devidos fins e sob as penas da lei, que a pesquisa constante neste trabalho foi por eles elaborada e que as informações necessárias foram objeto de consulta em literatura e outras fontes devidamente referenciadas, não efetuando plágio, fato comprovado pela utilização de programas anti-plágio. Declaram, ainda, que este trabalho, ou parte dele, não foi apresentado anteriormente para obtenção de qualquer outro grau acadêmico, estando cientes de que a inveracidade da presente declaração poderá resultar na anulação da titulação pela EsAO, entre outras consequências legais.', style: 'textoLegal', margin: [0, 0, 0, 50] },
+                        { text: 'Os conceitos expressos neste trabalho são de responsabilidade do(s) autor(es) e do(s) orientador(es) que declaram, para os devidos fins e sob as penas da lei, que a pesquisa constante neste trabalho foi por eles elaborada e que as informações necessárias foram objeto de consulta em literatura e outras fontes devidamente referenciadas, não efetuando plágio, fato comprovado pela utilização de programas anti-plágio. Declaram, ainda, que este trabalho, ou parte dele, não foi apresentado anteriormente para obtenção de qualquer outro grau acadêmico, estando cientes de que a inveracidade da presente declaração poderá resultar na anulação da titulação pela EsAO, entre outras consequências legais.', style: 'textoLegal', margin: [0, 0, 0, 150] },
                         
-                    ], 
-
-                    
-                footer: function(currentPage, pageCount) {
-        // Só desenha a ficha na ÚLTIMA página (onde está o texto legal)
-        if (currentPage === pageCount) {
-            return {
-                // Stack da Ficha (Cópia exata do seu código anterior)
+                    ],                   
+                
                 stack: [
                     { 
                         text: 'Ficha catalográfica elaborada pelo Sistema Gerador de Ficha Catalográfica da EsAO com dados informados pelo(a) próprio(a) autor(a).', 
@@ -528,7 +521,6 @@
                 margin: [120, 0, 0, 100] 
             };
         }
-        return null; // Nas outras páginas, sem rodapé
     },
 
     defaultStyle: { font: 'Roboto', fontSize: 10 },
