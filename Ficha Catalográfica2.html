@@ -473,68 +473,72 @@
                         
                         // Note que reduzi a margem inferior aqui para 50, pois a ficha agora é absoluta e não empurra mais o texto
                         { text: 'Os conceitos expressos neste trabalho são de responsabilidade do(s) autor(es) e do(s) orientador(es) que declaram, para os devidos fins e sob as penas da lei, que a pesquisa constante neste trabalho foi por eles elaborada e que as informações necessárias foram objeto de consulta em literatura e outras fontes devidamente referenciadas, não efetuando plágio, fato comprovado pela utilização de programas anti-plágio. Declaram, ainda, que este trabalho, ou parte dele, não foi apresentado anteriormente para obtenção de qualquer outro grau acadêmico, estando cientes de que a inveracidade da presente declaração poderá resultar na anulação da titulação pela EsAO, entre outras consequências legais.', style: 'textoLegal', margin: [0, 0, 0, 50] },
-
-                        // --- A Ficha Catalográfica (Objeto com Posição Absoluta) ---
-                        // Este objeto DEVE estar dentro do array 'content'
-                        {
-                            // Define a posição fixa (âncora)
-                            absolutePosition: { x: 120, y: 530 },
-                            
-                            stack: [
-                                // Nota de Rodapé do Sistema
-                                { 
-                                    text: 'Ficha catalográfica elaborada pelo Sistema Gerador de Ficha Catalográfica da EsAO com dados informados pelo(a) próprio(a) autor(a).', 
-                                    alignment: 'center', 
-                                    fontSize: 10, 
-                                    margin: [0, 0, 0, 5] 
-                                },
-                                
-                                // A Tabela da Ficha
-                                {
-                                    alignment: 'center', // Centraliza a tabela no container
-                                    table: {
-                                        widths: [354], // Largura fixa
-                                        body: [
-                                            [{
-                                                minHeight: 213, // Altura mínima
-                                                margin: [10, 10, 10, 10],
-                                                columns: [
-                                                    // Coluna do Cutter
-                                                    { width: 50, text: cutterFinal, alignment: 'center', margin: [0, 2, 0, 0] },
-                                                    // Coluna do Texto da Ficha
-                                                    {
-                                                        width: '*',
-                                                        stack: [
-                                                            { text: authorLine, margin: [0, 0, 0, 2], alignment: 'left' },
-                                                            { text: titleLine, leadingIndent: 20, margin: [0, 0, 0, 2], alignment: 'left' },
-                                                            { text: physDesc, leadingIndent: 20, margin: [0, 0, 0, 10], alignment: 'left' },
-                                                            { text: noteDesc, leadingIndent: 20, margin: [0, 0, 0, 2], alignment: 'left' },
-                                                            { text: advDesc, leadingIndent: 20, margin: [0, 0, 0, 10], alignment: 'left' },
-                                                            { text: keywordsText, leadingIndent: 20, margin: [0, 0, 0, 10], alignment: 'left' },
-                                                            { text: 'CDD 355', alignment: 'right' }
-                                                        ],
-                                                        alignment: 'left',
-                                                        fontSize: 10
-                                                    }
-                                                ]
-                                            }]
-                                        ]
-                                    },
-                                    layout: {
-                                        hLineWidth: function (i, node) { return 1; },
-                                        vLineWidth: function (i, node) { return 1; },
-                                        hLineColor: function (i, node) { return 'black'; },
-                                        vLineColor: function (i, node) { return 'black'; },
-                                    }
-                                }
-                            ]
-                        } 
+                        
                     ], 
 
                     defaultStyle: { font: 'Roboto', fontSize: 10 },
                     styles: { textoLegal: { alignment: 'justify', fontSize: 10, margin: [0, 0, 0, 15], lineHeight: 1.1 } }
                 };
 
+
+                footer: function(currentPage, pageCount) {
+        // Só desenha a ficha na ÚLTIMA página (onde está o texto legal)
+        if (currentPage === pageCount) {
+            return {
+                // Stack da Ficha (Cópia exata do seu código anterior)
+                stack: [
+                    { 
+                        text: 'Ficha catalográfica elaborada pelo Sistema...', 
+                        alignment: 'center', fontSize: 10, margin: [0, 0, 0, 5] 
+                    },
+                    {
+                        alignment: 'center',
+                        table: {
+                            widths: [354],
+                            body: [
+                                [{
+                                    minHeight: 213,
+                                    margin: [10, 10, 10, 10],
+                                    columns: [
+                                        { width: 50, text: cutterFinal, alignment: 'center', margin: [0, 2, 0, 0] },
+                                        {
+                                            width: '*',
+                                            stack: [
+                                                { text: authorLine, margin: [0, 0, 0, 2], alignment: 'left' },
+                                                { text: titleLine, leadingIndent: 20, margin: [0, 0, 0, 2], alignment: 'left' },
+                                                { text: physDesc, leadingIndent: 20, margin: [0, 0, 0, 10], alignment: 'left' },
+                                                { text: noteDesc, leadingIndent: 20, margin: [0, 0, 0, 2], alignment: 'left' },
+                                                { text: advDesc, leadingIndent: 20, margin: [0, 0, 0, 10], alignment: 'left' },
+                                                { text: keywordsText, leadingIndent: 20, margin: [0, 0, 0, 10], alignment: 'left' },
+                                                { text: 'CDD 355', alignment: 'right' }
+                                                   ],
+                                            alignment: 'left', fontSize: 10
+                                        }
+                                    ]
+                                }]
+                            ]
+                        },
+                        layout: {
+                                        hLineWidth: function (i, node) { return 1; },
+                                        vLineWidth: function (i, node) { return 1; },
+                                        hLineColor: function (i, node) { return 'black'; },
+                                        vLineColor: function (i, node) { return 'black'; },
+                                    }
+                    }
+                ],
+                // Margem relativa ao rodapé da página. 
+                // [esquerda, cima, direita, baixo]
+                // Aumente o último valor (40) para subir a ficha em relação à borda do papel
+                margin: [120, 0, 0, 40] 
+            };
+        }
+        return null; // Nas outras páginas, sem rodapé
+    },
+
+    defaultStyle: { font: 'Roboto', fontSize: 10 },
+    styles: { textoLegal: { alignment: 'justify', fontSize: 10, margin: [0, 0, 0, 15], lineHeight: 1.1 } }
+};
+        
                 // MUDANÇA CRÍTICA AQUI: USAR .download() EM VEZ DE .open()
                 // 1. Cria um nome de arquivo limpo (Ex: SILVA_Joao_Ficha.pdf)
                 // Removemos acentos e espaços para garantir que baixe em qualquer computador/celular
