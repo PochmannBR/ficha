@@ -1,5 +1,5 @@
-# ficha
-Agregador de links dos Geradores de Ficha Catalográfica do DECEx
+# Agregador de links dos Geradores de Ficha Catalográfica do DECEx
+Desenvolvido por Pablo Gustavo Cogo Pochmann
 
 Gerador da EsAO
 https://pochmannbr.github.io/ficha/Ficha%20Catalogr%C3%A1fica.html
